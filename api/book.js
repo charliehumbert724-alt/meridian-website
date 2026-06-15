@@ -112,7 +112,12 @@ module.exports = async (req, res) => {
     res.status(200).json({ message: 'Booked! Confirmation sent.', meetLink });
   } catch (err) {
     console.error('Booking error:', err);
-    res.status(500).json({ message: 'Could not complete the booking. Please try again.' });
+    // TEMP DEBUG: surface the real reason on the page so we can diagnose.
+    // Remove this detail (go back to a generic message) once it's working.
+    res.status(500).json({
+      message: 'Could not complete the booking. Please try again.',
+      debug: (err && err.message) || String(err),
+    });
   }
 };
 
