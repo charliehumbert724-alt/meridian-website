@@ -41,6 +41,29 @@ const confirmBtn = document.getElementById('confirmBtn');
 let selected = { date: null, time: null, isoDate: null, isoTime: null };
 const pad = (n) => String(n).padStart(2, '0');
 
+// Busy time ranges pulled from the calendar (via /api/availability) so that
+// slots that are already booked show up crossed out and can't be selected.
+const CONSULT_MINUTES = 20;
+let busyIntervals = []; // [{ start: ms, end: ms }]
+
+async function fetchAvailability() {
+  try {
+    const res = await fetch('/api/availability');
+    const data = await res.json();
+    busyIntervals = (data.busy || []).map((b) => ({
+      start: new Date(b.start).getTime(),
+      end: new Date(b.end).getTime(),
+    }));
+  } catch (err) {
+    busyIntervals = []; // fail open — never block booking if this errors
+  }
+}
+
+// Does a slot [startMs, endMs) overlap any busy range?
+function slotIsBusy(startMs, endMs) {
+  return busyIntervals.some((b) => startMs < b.end && endMs > b.start);
+}
+
 // Open / close
 document.querySelectorAll('[data-open-booking]').forEach((btn) =>
   btn.addEventListener('click', openBooking)
@@ -57,6 +80,10 @@ document.addEventListener('keydown', (e) => {
 
 function openBooking() {
   buildDates();
+  // Load taken slots, then refresh times if a date is already chosen.
+  fetchAvailability().then(() => {
+    if (selected.isoDate) buildTimes();
+  });
   document.getElementById('stepPick').hidden = false;
   document.getElementById('stepDone').hidden = true;
   selected = { date: null, time: null, isoDate: null, isoTime: null };
@@ -114,13 +141,25 @@ function buildTimes() {
     const btn = document.createElement('button');
     btn.className = 'time-btn';
     btn.textContent = label;
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.time-btn').forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
-      selected.time = label;
-      selected.isoTime = `${pad(h)}:${pad(m)}`;
-      updateSummary();
-    });
+
+    // Is this slot already taken on the calendar? If so, leave it visible but
+    // crossed out and unclickable.
+    const startMs = new Date(`${selected.isoDate}T${pad(h)}:${pad(m)}:00`).getTime();
+    const endMs = startMs + CONSULT_MINUTES * 60 * 1000;
+
+    if (slotIsBusy(startMs, endMs)) {
+      btn.classList.add('unavailable');
+      btn.disabled = true;
+      btn.title = 'Already booked';
+    } else {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.time-btn').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        selected.time = label;
+        selected.isoTime = `${pad(h)}:${pad(m)}`;
+        updateSummary();
+      });
+    }
     timeList.appendChild(btn);
   }
 }
@@ -175,8 +214,6 @@ confirmBtn.addEventListener('click', async () => {
     const data = await res.json().catch(() => ({}));
     ok = res.ok;
     message = data.message || (ok ? '' : 'Something went wrong.');
-    // TEMP DEBUG: show the real server error on the page while we diagnose.
-    if (!ok && data.debug) message += `  [details: ${data.debug}]`;
   } catch (err) {
     // No backend reachable (e.g. opening the file locally without `vercel dev`)
     message = 'Backend not connected yet — this is the demo flow. See BACKEND_SETUP.md.';
@@ -214,12 +251,46 @@ hello@expon3nt.com`;
   confirmBtn.textContent = original;
 });
 
-// Contact form (front-end only for now — swap for a real handler later)
-function handleSubmit(event) {
+// Contact form — submits to Formspree via AJAX so the visitor stays on the
+// page and sees an inline success/error message (no redirect).
+async function handleSubmit(event) {
   event.preventDefault();
+  const form = event.target;
   const note = document.getElementById('formNote');
-  const name = event.target.name.value.trim();
-  note.textContent = `Thanks${name ? ', ' + name : ''}! This is a demo form — wire it up to email or a service like Formspree to receive messages.`;
-  event.target.reset();
+  const name = form.name.value.trim();
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const original = submitBtn ? submitBtn.textContent : '';
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+  }
+  note.textContent = '';
+
+  try {
+    const res = await fetch(form.action, {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+      body: new FormData(form),
+    });
+
+    if (res.ok) {
+      note.textContent = `Thanks${name ? ', ' + name : ''}! Your message is on its way — I'll be in touch soon.`;
+      form.reset();
+    } else {
+      // Formspree returns { errors: [{ message }] } on validation/config errors.
+      const data = await res.json().catch(() => ({}));
+      const msg = data.errors ? data.errors.map((e) => e.message).join(', ') : 'Something went wrong.';
+      note.textContent = `⚠️ ${msg} Please try again, or email me directly.`;
+    }
+  } catch (err) {
+    note.textContent = '⚠️ Network error — please try again, or email me directly.';
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = original;
+    }
+  }
+
   return false;
 }

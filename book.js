@@ -103,29 +103,18 @@ module.exports = async (req, res) => {
     const meetLink = event.data.hangoutLink || '';
 
     // 2) Send the confirmation email -----------------------------------------
-    const apiKey = process.env.RESEND_API_KEY || '';
-    // TEMP DEBUG: describe the key the function can actually see (no secret leaked).
-    const keyInfo = apiKey
-      ? `seen len=${apiKey.length} starts="${apiKey.slice(0, 3)}" ends="${apiKey.slice(-3)}"`
-      : 'NOT SET in this deployment';
-    const resend = new Resend(apiKey);
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const { subject, text, html } = buildEmail({ name, dateLabel, timeLabel, meetLink });
     const sent = await resend.emails.send({ from: CONFIG.fromEmail, to: email, subject, text, html });
-    // The Resend SDK does NOT throw on API errors — it returns { error }.
-    // Surface it so a failed email can't masquerade as success.
+    // The Resend SDK returns { error } instead of throwing — surface real failures.
     if (sent && sent.error) {
-      throw new Error(`Email failed: ${sent.error.message || JSON.stringify(sent.error)} | KEY ${keyInfo}`);
+      throw new Error(`Email failed: ${sent.error.message || JSON.stringify(sent.error)}`);
     }
 
     res.status(200).json({ message: 'Booked! Confirmation sent.', meetLink });
   } catch (err) {
     console.error('Booking error:', err);
-    // TEMP DEBUG: surface the real reason on the page so we can diagnose.
-    // Remove this detail (go back to a generic message) once it's working.
-    res.status(500).json({
-      message: 'Could not complete the booking. Please try again.',
-      debug: (err && err.message) || String(err),
-    });
+    res.status(500).json({ message: 'Could not complete the booking. Please try again.' });
   }
 };
 

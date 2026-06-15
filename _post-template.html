@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!-- =============================================================
+     HOW TO WRITE A NEW POST
+     1. Make a COPY of this file and rename it to something simple
+        with no spaces, e.g.  why-social-media-matters.html
+     2. Fill in every spot marked  ✏️  below.
+     3. Add a matching card to the list in index.html (instructions there).
+     4. Commit on GitHub — your post goes live automatically.
+
+     Writing the body: use these building blocks between the <article> tags.
+        <h2>A section heading</h2>
+        <p>A normal paragraph.</p>
+        <h3>A smaller sub-heading</h3>
+        <ul><li>A bullet point</li><li>Another</li></ul>
+        <blockquote>A pull-quote that stands out.</blockquote>
+        <a href="https://example.com">a link</a>
+     ============================================================= -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- ✏️ Tab + Google title -->
+  <title>POST TITLE HERE — expon3nt</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <!-- ✏️ One-sentence summary that shows under the title in Google -->
+  <meta name="description" content="SHORT SUMMARY HERE" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <!-- Navigation (leave as-is) -->
+  <header class="nav" id="top">
+    <a href="../index.html" class="brand">expon3nt<span class="dot">.</span></a>
+    <nav class="nav-links">
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#approach">Approach</a>
+      <a href="../index.html#about">About</a>
+      <a href="index.html">Blog</a>
+      <a href="../index.html#book" class="nav-cta">Book a consult</a>
+    </nav>
+    <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+  </header>
+
+  <article class="article">
+    <a href="index.html" class="back-link">← Back to the blog</a>
+    <!-- ✏️ Category · Date -->
+    <span class="post-meta" style="display:block; margin-top:1rem;">CATEGORY · MONTH DAY, YEAR</span>
+    <!-- ✏️ The big headline -->
+    <h1>POST TITLE HERE</h1>
+
+    <!-- ✏️ Write your post below. Replace this intro paragraph. -->
+    <p>
+      Your opening paragraph goes here.
+    </p>
+
+    <h2>A section heading</h2>
+    <p>More writing here.</p>
+
+    <!-- Call-to-action box — leave this at the bottom of every post -->
+    <div class="post-cta">
+      <h3>Want help putting this into practice?</h3>
+      <a href="../index.html#book" class="btn btn-primary">Book a free 20-min consult</a>
+    </div>
+  </article>
+
+  <footer class="footer">
+    <a href="../index.html" class="brand">expon3nt<span class="dot">.</span></a>
+    <p>© <span id="year"></span> expon3nt. Get found. Get followed. Get built.</p>
+    <a href="#top" class="back-top">Back to top ↑</a>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

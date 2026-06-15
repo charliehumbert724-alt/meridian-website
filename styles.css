@@ -440,6 +440,13 @@ h1, h2, h3, h4, .brand { font-family: 'Sora', sans-serif; }
 }
 .time-btn:hover { border-color: var(--accent-2); }
 .time-btn.active { border-color: var(--accent); background: rgba(108, 92, 231, 0.2); }
+.time-btn.unavailable {
+  text-decoration: line-through;
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: var(--bg);
+}
+.time-btn.unavailable:hover { border-color: var(--border); }
 
 .booking-footer { margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.5rem; }
 .selection-summary { color: var(--accent-2); font-weight: 500; }

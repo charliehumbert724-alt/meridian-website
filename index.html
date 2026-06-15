@@ -3,213 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>expon3nt — SEO, Social & Web Development</title>
-  <meta name="description" content="expon3nt helps brands get found, get followed, and get built. Search engine optimization, social media presence, and web development under one roof." />
+  <title>Blog — expon3nt</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta name="description" content="Notes on SEO, social media, and web development from expon3nt." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <!-- Note: ../ goes UP one folder, because this page lives inside /blog -->
+  <link rel="stylesheet" href="../styles.css" />
 </head>
 <body>
   <!-- Navigation -->
   <header class="nav" id="top">
-    <a href="#top" class="brand">expon3nt<span class="dot">.</span></a>
+    <a href="../index.html" class="brand">expon3nt<span class="dot">.</span></a>
     <nav class="nav-links">
-      <a href="#services">Services</a>
-      <a href="#approach">Approach</a>
-      <a href="#about">About</a>
-      <a href="blog/index.html">Blog</a>
-      <button type="button" class="nav-cta" data-open-booking>Book a consult</button>
+      <a href="../index.html#services">Services</a>
+      <a href="../index.html#approach">Approach</a>
+      <a href="../index.html#about">About</a>
+      <a href="index.html">Blog</a>
+      <a href="../index.html#book" class="nav-cta">Book a consult</a>
     </nav>
     <button class="menu-toggle" aria-label="Toggle menu">☰</button>
   </header>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-glow"></div>
-    <p class="eyebrow">Digital growth studio</p>
-    <h1>Get found. Get followed.<br /><span class="accent">Get built.</span></h1>
-    <p class="lead">
-      I help brands cut through the noise online — climbing search rankings,
-      building a presence people actually follow, and shipping websites that convert.
-    </p>
-    <div class="hero-actions">
-      <button type="button" class="btn btn-primary" data-open-booking>Book a free 20-min consult</button>
-      <a href="#services" class="btn btn-ghost">See what I do →</a>
-    </div>
-    <div class="hero-stats">
-      <div><strong>3</strong><span>core services</span></div>
-      <div><strong>1</strong><span>point of contact</span></div>
-      <div><strong>∞</strong><span>iterations until it's right</span></div>
-    </div>
+  <section class="blog-hero">
+    <p class="eyebrow">The expon3nt blog</p>
+    <h1>Get found. Get followed. <span class="accent">Get smarter.</span></h1>
+    <p class="lead">Plain-English notes on SEO, social media, and building a site that works.</p>
   </section>
 
-  <!-- Services -->
-  <section class="services" id="services">
-    <div class="section-head">
-      <p class="eyebrow">What I do</p>
-      <h2>Three services, one strategy</h2>
-      <p class="section-sub">Each one feeds the others. Together they build momentum that compounds.</p>
-    </div>
+  <!-- =========================================================
+       POST LIST
+       To add a new post:
+         1. Copy _post-template.html and rename it (e.g. my-post.html)
+         2. Write your post in that new file
+         3. Copy ONE <a class="post-card"> block below, paste it at the
+            TOP of this list, and update the link, date, title, and summary.
+       Newest posts go at the top.
+       ========================================================= -->
+  <div class="post-list">
 
-    <div class="service-grid">
-      <article class="card">
-        <div class="card-icon">🔍</div>
-        <h3>Search Engine Optimization</h3>
-        <p>Show up when it matters. I audit, fix, and tune your site so the right people find you on Google — not your competitors.</p>
-        <ul>
-          <li>Technical & on-page audits</li>
-          <li>Keyword & content strategy</li>
-          <li>Local & rank tracking</li>
-        </ul>
-      </article>
+    <a class="post-card" href="getting-found-on-google.html">
+      <span class="post-meta">SEO · Jun 14, 2026</span>
+      <h2>5 things that actually move you up Google</h2>
+      <p>Forget the myths. Here are the handful of fundamentals that genuinely help small brands rank — and what's a waste of time.</p>
+      <span class="read-more">Read more →</span>
+    </a>
 
-      <article class="card card-featured">
-        <div class="card-icon">📣</div>
-        <h3>Social Media Presence</h3>
-        <p>Turn scrolls into follows. I build a consistent voice and content rhythm that grows an audience and keeps them engaged.</p>
-        <ul>
-          <li>Content strategy & calendars</li>
-          <li>Profile & brand consistency</li>
-          <li>Growth & engagement</li>
-        </ul>
-      </article>
+    <!-- Duplicate the block above for each new post. -->
 
-      <article class="card">
-        <div class="card-icon">⚡</div>
-        <h3>Web Development</h3>
-        <p>Fast, modern sites that work. From landing pages to full builds — clean code, responsive design, and conversion in mind.</p>
-        <ul>
-          <li>Responsive, fast websites</li>
-          <li>Landing pages that convert</li>
-          <li>Maintenance & improvements</li>
-        </ul>
-      </article>
-    </div>
-  </section>
+  </div>
 
-  <!-- Approach -->
-  <section class="approach" id="approach">
-    <div class="section-head">
-      <p class="eyebrow">How it works</p>
-      <h2>A simple, honest process</h2>
-    </div>
-    <ol class="steps">
-      <li><span class="step-num">01</span><h4>Listen</h4><p>We start with your goals, your audience, and what's actually getting in the way.</p></li>
-      <li><span class="step-num">02</span><h4>Build</h4><p>I put a plan into motion — whether that's a site, a strategy, or both.</p></li>
-      <li><span class="step-num">03</span><h4>Measure</h4><p>Real numbers, plain language. We keep what works and cut what doesn't.</p></li>
-      <li><span class="step-num">04</span><h4>Grow</h4><p>Steady, compounding progress. No vanity metrics, just results.</p></li>
-    </ol>
-  </section>
-
-  <!-- About -->
-  <section class="about" id="about">
-    <div class="about-inner">
-      <p class="eyebrow">About</p>
-      <h2>Hi — I'm the person behind expon3nt.</h2>
-      <p>
-        I'm just getting started, and that's the best part: you get someone hungry,
-        hands-on, and personally invested in your win. No agency layers, no account
-        managers passing you around — just direct work that moves the needle.
-      </p>
-      <p>
-        If you've got an idea, a brand, or a business that deserves more attention
-        online, I'd love to hear about it.
-      </p>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section class="contact" id="contact">
-    <div class="contact-card">
-      <p class="eyebrow">Get in touch</p>
-      <h2>Let's build something worth finding.</h2>
-      <p class="section-sub">Tell me a bit about your project and I'll get back to you.</p>
-      <form class="contact-form" onsubmit="return handleSubmit(event)">
-        <div class="field-row">
-          <input type="text" name="name" placeholder="Your name" required />
-          <input type="email" name="email" placeholder="Email address" required />
-        </div>
-        <select name="service" required>
-          <option value="" disabled selected>What do you need?</option>
-          <option>Search Engine Optimization</option>
-          <option>Social Media Presence</option>
-          <option>Web Development</option>
-          <option>A mix of everything</option>
-        </select>
-        <textarea name="message" rows="4" placeholder="Tell me about your project..." required></textarea>
-        <button type="submit" class="btn btn-primary">Send message</button>
-        <p class="form-note" id="formNote"></p>
-      </form>
-    </div>
-  </section>
-
-  <!-- Footer -->
   <footer class="footer">
-    <span class="brand">expon3nt<span class="dot">.</span></span>
+    <a href="../index.html" class="brand">expon3nt<span class="dot">.</span></a>
     <p>© <span id="year"></span> expon3nt. Get found. Get followed. Get built.</p>
     <a href="#top" class="back-top">Back to top ↑</a>
   </footer>
 
-  <!-- Booking modal -->
-  <div class="modal-overlay" id="bookingModal" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="bookingTitle">
-      <button class="modal-close" data-close-booking aria-label="Close">×</button>
-
-      <!-- Step 1: pick a slot -->
-      <div class="booking-step" id="stepPick">
-        <p class="eyebrow">Free consult</p>
-        <h2 id="bookingTitle">Book your 20 minutes</h2>
-        <p class="section-sub">Pick a day (Mon–Sat) and a time between 10:00 and 5:00.</p>
-
-        <div class="booking-grid">
-          <div>
-            <h4 class="booking-label">Choose a date</h4>
-            <div class="date-list" id="dateList"></div>
-          </div>
-          <div>
-            <h4 class="booking-label">Choose a time</h4>
-            <div class="time-list" id="timeList">
-              <p class="time-hint">← Select a date first</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="booking-footer">
-          <p class="selection-summary" id="selectionSummary">No time selected yet.</p>
-          <div class="field-row" style="margin-top:1rem;">
-            <input type="text" id="bookName" placeholder="Your name" required />
-            <input type="email" id="bookEmail" placeholder="Email address" required />
-          </div>
-          <button class="btn btn-primary" id="confirmBtn" disabled style="margin-top:1rem;">
-            Confirm booking
-          </button>
-        </div>
-      </div>
-
-      <!-- Step 2: confirmation + editable email template (demo) -->
-      <div class="booking-step" id="stepDone" hidden>
-        <div class="done-check">✓</div>
-        <h2>You're booked!</h2>
-        <p class="section-sub" id="doneSummary"></p>
-
-        <div class="email-preview">
-          <div class="email-preview-head">
-            <span>📧 Preview of the confirmation email — the real one is sent automatically. Edit its template in <code>api/book.js</code>.</span>
-          </div>
-          <input class="email-subject" id="emailSubject"
-                 value="Your free 20-min consult with expon3nt is confirmed ✅" readonly />
-          <textarea class="email-body" id="emailBody" rows="12" readonly></textarea>
-        </div>
-        <p class="form-note" id="sendNote"></p>
-
-        <div class="booking-footer" style="display:flex; gap:1rem; flex-wrap:wrap;">
-          <button class="btn btn-primary" data-close-booking>Done</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
