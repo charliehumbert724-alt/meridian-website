@@ -86,13 +86,16 @@ module.exports = async (req, res) => {
     const event = await calendar.events.insert({
       calendarId: CONFIG.calendarId,
       conferenceDataVersion: 1, // enables the auto-generated Google Meet link
-      sendUpdates: 'all',       // emails the visitor a calendar invite too
+      sendUpdates: 'none',      // can't invite attendees from a service account
+                                // on a personal Gmail; the Resend email below
+                                // delivers the Meet link to the visitor instead.
       requestBody: {
         summary: `${CONFIG.brand} consult — ${name}`,
-        description: `Free ${CONFIG.consultMinutes}-minute consult booked from the website.`,
+        // Put the visitor's contact in the description since we can't add them
+        // as a formal attendee (would require Workspace Domain-Wide Delegation).
+        description: `Free ${CONFIG.consultMinutes}-minute consult booked from the website.\nName: ${name}\nEmail: ${email}`,
         start: { dateTime: start.toISOString(), timeZone: timeZone || 'UTC' },
         end: { dateTime: end.toISOString(), timeZone: timeZone || 'UTC' },
-        attendees: [{ email }],
         conferenceData: {
           createRequest: {
             requestId: `consult-${Date.now()}`,
