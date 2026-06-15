@@ -16,15 +16,17 @@ const { Resend } = require('resend');
 
 // ----------------------------- CONFIG ---------------------------------------
 const CONFIG = {
-  brand: 'Meridian',
+  brand: 'expon3nt',
   // Test sender: works immediately, but Resend only delivers it to the email
-  // you signed up with. Switch to 'Meridian <hello@yourdomain.com>' once you've
+  // you signed up with. Switch to 'expon3nt <hello@yourdomain.com>' once you've
   // verified your own domain in Resend.
-  fromEmail: 'Meridian <onboarding@resend.dev>',
+  fromEmail: 'expon3nt <onboarding@resend.dev>',
   consultMinutes: 20,
-  // Which calendar to write to. 'primary' = the calendar of the account you
-  // shared with the service account. Or paste a specific calendar ID.
-  calendarId: 'primary',
+  // Which calendar to write to. IMPORTANT: with a service account, 'primary'
+  // is the ROBOT's own (invisible) calendar — not yours. Use your personal
+  // calendar's ID, which is just your Gmail address, and make sure you've
+  // shared that calendar with the service-account email ("Make changes to events").
+  calendarId: 'charliehumbert724@gmail.com',
 };
 
 // --------------------------- EMAIL TEMPLATE ----------------------------------
@@ -85,29 +87,35 @@ module.exports = async (req, res) => {
     const calendar = getCalendarClient();
     const event = await calendar.events.insert({
       calendarId: CONFIG.calendarId,
-      conferenceDataVersion: 1, // enables the auto-generated Google Meet link
-      sendUpdates: 'all',       // emails the visitor a calendar invite too
+      sendUpdates: 'none',      // can't invite attendees from a service account
+                                // on a personal Gmail; the Resend email below
+                                // confirms the booking to the visitor instead.
       requestBody: {
         summary: `${CONFIG.brand} consult — ${name}`,
-        description: `Free ${CONFIG.consultMinutes}-minute consult booked from the website.`,
+        // Put the visitor's contact in the description since we can't add them
+        // as a formal attendee (would require Workspace Domain-Wide Delegation).
+        description: `Free ${CONFIG.consultMinutes}-minute consult booked from the website.\nName: ${name}\nEmail: ${email}`,
         start: { dateTime: start.toISOString(), timeZone: timeZone || 'UTC' },
         end: { dateTime: end.toISOString(), timeZone: timeZone || 'UTC' },
-        attendees: [{ email }],
-        conferenceData: {
-          createRequest: {
-            requestId: `consult-${Date.now()}`,
-            conferenceSolutionKey: { type: 'hangoutsMeet' },
-          },
-        },
       },
     });
 
     const meetLink = event.data.hangoutLink || '';
 
     // 2) Send the confirmation email -----------------------------------------
-    const resend = new Resend(process.env.RESEND_API_KEY);
+    const apiKey = process.env.RESEND_API_KEY || '';
+    // TEMP DEBUG: describe the key the function can actually see (no secret leaked).
+    const keyInfo = apiKey
+      ? `seen len=${apiKey.length} starts="${apiKey.slice(0, 3)}" ends="${apiKey.slice(-3)}"`
+      : 'NOT SET in this deployment';
+    const resend = new Resend(apiKey);
     const { subject, text, html } = buildEmail({ name, dateLabel, timeLabel, meetLink });
-    await resend.emails.send({ from: CONFIG.fromEmail, to: email, subject, text, html });
+    const sent = await resend.emails.send({ from: CONFIG.fromEmail, to: email, subject, text, html });
+    // The Resend SDK does NOT throw on API errors — it returns { error }.
+    // Surface it so a failed email can't masquerade as success.
+    if (sent && sent.error) {
+      throw new Error(`Email failed: ${sent.error.message || JSON.stringify(sent.error)} | KEY ${keyInfo}`);
+    }
 
     res.status(200).json({ message: 'Booked! Confirmation sent.', meetLink });
   } catch (err) {
