@@ -1,0 +1,14 @@
+{
+  "name": "meridian-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal brand site with a free-consult booking flow (Google Calendar + Resend email).",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "googleapis": "^144.0.0",
+    "resend": "^4.0.0"
+  }
+}
