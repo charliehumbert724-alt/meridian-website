@@ -16,11 +16,11 @@ const { Resend } = require('resend');
 
 // ----------------------------- CONFIG ---------------------------------------
 const CONFIG = {
-  brand: 'Meridian',
+  brand: 'expon3nt',
   // Test sender: works immediately, but Resend only delivers it to the email
-  // you signed up with. Switch to 'Meridian <hello@yourdomain.com>' once you've
+  // you signed up with. Switch to 'expon3nt <hello@yourdomain.com>' once you've
   // verified your own domain in Resend.
-  fromEmail: 'Meridian <onboarding@resend.dev>',
+  fromEmail: 'expon3nt <onboarding@resend.dev>',
   consultMinutes: 20,
   // Which calendar to write to. 'primary' = the calendar of the account you
   // shared with the service account. Or paste a specific calendar ID.
@@ -85,10 +85,9 @@ module.exports = async (req, res) => {
     const calendar = getCalendarClient();
     const event = await calendar.events.insert({
       calendarId: CONFIG.calendarId,
-      conferenceDataVersion: 1, // enables the auto-generated Google Meet link
       sendUpdates: 'none',      // can't invite attendees from a service account
                                 // on a personal Gmail; the Resend email below
-                                // delivers the Meet link to the visitor instead.
+                                // confirms the booking to the visitor instead.
       requestBody: {
         summary: `${CONFIG.brand} consult — ${name}`,
         // Put the visitor's contact in the description since we can't add them
@@ -96,12 +95,6 @@ module.exports = async (req, res) => {
         description: `Free ${CONFIG.consultMinutes}-minute consult booked from the website.\nName: ${name}\nEmail: ${email}`,
         start: { dateTime: start.toISOString(), timeZone: timeZone || 'UTC' },
         end: { dateTime: end.toISOString(), timeZone: timeZone || 'UTC' },
-        conferenceData: {
-          createRequest: {
-            requestId: `consult-${Date.now()}`,
-            conferenceSolutionKey: { type: 'hangoutsMeet' },
-          },
-        },
       },
     });
 

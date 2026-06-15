@@ -187,11 +187,11 @@ confirmBtn.addEventListener('click', async () => {
     `${selected.date} at ${selected.time} · Confirmation ${ok ? 'sent' : 'will go'} to ${email}.`;
 
   document.getElementById('emailSubject').value =
-    'Your free 20-min consult with Meridian is confirmed ✅';
+    'Your free 20-min consult with expon3nt is confirmed ✅';
   document.getElementById('emailBody').value =
 `Hi ${name},
 
-Thanks for booking a free 20-minute consult with Meridian — I'm looking forward to it!
+Thanks for booking a free 20-minute consult with expon3nt — I'm looking forward to it!
 
   🗓  ${selected.date}
   🕒  ${selected.time} (20 minutes)
@@ -201,8 +201,8 @@ Before we talk, feel free to reply with anything you'd like to focus on
 (SEO, social media, your website, or all three).
 
 Talk soon,
-Meridian
-hello@meridian.com`;
+expon3nt
+hello@expon3nt.com`;
 
   document.getElementById('sendNote').textContent = ok
     ? '✓ Booked — a Google Calendar invite and confirmation email are on their way.'
