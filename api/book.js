@@ -22,9 +22,11 @@ const CONFIG = {
   // verified your own domain in Resend.
   fromEmail: 'expon3nt <onboarding@resend.dev>',
   consultMinutes: 20,
-  // Which calendar to write to. 'primary' = the calendar of the account you
-  // shared with the service account. Or paste a specific calendar ID.
-  calendarId: 'primary',
+  // Which calendar to write to. IMPORTANT: with a service account, 'primary'
+  // is the ROBOT's own (invisible) calendar — not yours. Use your personal
+  // calendar's ID, which is just your Gmail address, and make sure you've
+  // shared that calendar with the service-account email ("Make changes to events").
+  calendarId: 'charliehumbert724@gmail.com',
 };
 
 // --------------------------- EMAIL TEMPLATE ----------------------------------
@@ -103,7 +105,12 @@ module.exports = async (req, res) => {
     // 2) Send the confirmation email -----------------------------------------
     const resend = new Resend(process.env.RESEND_API_KEY);
     const { subject, text, html } = buildEmail({ name, dateLabel, timeLabel, meetLink });
-    await resend.emails.send({ from: CONFIG.fromEmail, to: email, subject, text, html });
+    const sent = await resend.emails.send({ from: CONFIG.fromEmail, to: email, subject, text, html });
+    // The Resend SDK does NOT throw on API errors — it returns { error }.
+    // Surface it so a failed email can't masquerade as success.
+    if (sent && sent.error) {
+      throw new Error(`Email failed: ${sent.error.message || JSON.stringify(sent.error)}`);
+    }
 
     res.status(200).json({ message: 'Booked! Confirmation sent.', meetLink });
   } catch (err) {
