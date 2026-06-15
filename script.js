@@ -175,6 +175,8 @@ confirmBtn.addEventListener('click', async () => {
     const data = await res.json().catch(() => ({}));
     ok = res.ok;
     message = data.message || (ok ? '' : 'Something went wrong.');
+    // TEMP DEBUG: show the real server error on the page while we diagnose.
+    if (!ok && data.debug) message += `  [details: ${data.debug}]`;
   } catch (err) {
     // No backend reachable (e.g. opening the file locally without `vercel dev`)
     message = 'Backend not connected yet — this is the demo flow. See BACKEND_SETUP.md.';
